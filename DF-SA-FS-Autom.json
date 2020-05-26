@@ -1,0 +1,92 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "dataFactoryname": {
+            "defaultValue": "your Data Factory name",
+            "type": "String"
+        },
+        "location": {
+            "defaultValue": "centralus",
+            "type": "String"
+        },
+        "storageaccountname":{
+            "defaultvalue": "{your storage account name goes here}",
+            "type": "string"
+        },
+        "copyfileshare": {
+            "defaultValue": "File share will copy from",
+            "type": "string"
+        },
+        "destinationfileshare": {
+            "defaultValue": "Destination file share will copy to",
+            "type": "string"
+        },
+        "automationaccount": {
+           "defaultValue": "Automation Account Name",
+           "type" : "string"
+        }
+        
+    },
+    "resources": [
+        {
+            "type": "Microsoft.DataFactory/factories",
+            "apiVersion": "2018-06-01",
+            "name": "[parameters('dataFactoryname')]",
+            "location": "[parameters('location')]",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {}
+            
+        },
+       {
+           "name": "[parameters('storageaccountname')]",
+           "type": "Microsoft.Storage/storageAccounts",
+           "apiVersion": "2019-06-01",
+           "tags": {
+               "displayName": "storageaccount1"
+           },
+           "location": "[parameters('location')]",
+           "kind": "StorageV2",
+           
+           "sku": {
+               "name": "Standard_LRS",
+               "tier": "Standard"      
+           },
+            "properties": {
+                "accessTier": "Hot"
+            }
+       },
+       {
+           "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+           "apiVersion": "2019-06-01",
+           "name": "[concat(parameters('storageaccountname'), '/default/',parameters('copyfileshare'))]",
+         "dependsOn": [
+             "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageaccountname'))]"
+         ]  
+       },
+       {
+           "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+           "apiVersion": "2019-06-01",
+           "name": "[concat(parameters('storageaccountname'), '/default/', parameters('destinationfileshare'))]",
+         "dependsOn": [
+             "[resourceId('Microsoft.Storage/storageAccounts',parameters('storageaccountname'))]"
+         ]  
+       },
+       {
+           "name": "[parameters('automationaccount')]",
+           "type": "Microsoft.Automation/automationAccounts",
+           "apiVersion": "2015-10-31",
+           "location": "[resourceGroup().location]",
+           "tags": {
+           },
+           "properties": {
+               "sku": {
+                   "name": "Free"
+               }
+           }
+       }
+       
+    ]
+}
