@@ -17,6 +17,6 @@ This project contains the following:
 3. For the Runbooks, you will need to import the Az.Account module and Az.Keyvault from the gallery. You will also need to create a Run As Account and grant access in the KeyVault so it could read the Storage Account Key value.
 
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https://raw.githubusercontent.com/oortizmcp/PaperlessSolution/master/DF-SA-FS-Autom.json" target="_blank">
   <img src="https://aka.ms/deploytoazurebutton"/>
 </a>
